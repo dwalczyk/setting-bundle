@@ -1,0 +1,172 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% if collector.showDataCollector %}
+        {% set icon %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-bolt" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13.256 20.473c-.855 .907 -2.583 .643 -2.931 -.79a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.07 .26 1.488 1.29 1.254 2.15" /><path d="M19 16l-2 3h4l-2 3" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+            <span class="sf-toolbar-value">{{ collector.callsCount }}</span>
+            <span class="sf-toolbar-info-piece-additional-detail">
+                <span class="sf-toolbar-label">in</span>
+                <span class="sf-toolbar-value">{{ collector.callsTotalDuration() }}</span>
+                <span class="sf-toolbar-label">ms</span>
+            </span>
+        {% endset %}
+
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                <b>Gets</b>
+                <span class="sf-toolbar-status">{{ collector.callsCount('get') }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Gets time</b>
+                <span>{{ collector.callsTotalDuration('get') }} ms</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Sets</b>
+                <span class="sf-toolbar-status">{{ collector.callsCount('set') }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Sets time</b>
+                <span>{{ collector.callsTotalDuration('set') }} ms</span>
+            </div>
+
+        {% endset %}
+
+        {# the 'link' value set to 'false' means that this panel doesn't
+           show a section in the web profiler #}
+        {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13.256 20.473c-.855 .907 -2.583 .643 -2.931 -.79a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.07 .26 1.488 1.29 1.254 2.15" /><path d="M19 16l-2 3h4l-2 3" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+        </span>
+        <strong>Setting</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Setting</h2>
+
+    <h3>Metrics</h3>
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.callsCount }}</span>
+            <span class="label">Total calls</span>
+        </div>
+        <div class="metric">
+            <span class="value">{{ collector.callsTotalDuration }} <span class="unit">ms</span></span>
+            <span class="label">Total time</span>
+        </div>
+
+        <div class="metric-divider"></div>
+
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.callsCount('get') }}</span>
+                <span class="label">Total gets</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.callsTotalDuration('get') }} <span class="unit">ms</span></span>
+                <span class="label">Total gets time</span>
+            </div>
+        </div>
+
+        <div class="metric-divider"></div>
+
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.callsCount('set') }}</span>
+                <span class="label">Total sets</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.callsTotalDuration('set') }} <span class="unit">ms</span></span>
+                <span class="label">Total sets time </span>
+            </div>
+        </div>
+    </div>
+
+    <h3>Calls</h3>
+    <div class="sf-tabs">
+        {% for callType in ['all']|merge(collector.callsTypes) %}
+            {% set callKey = callType %}
+            {% if callKey == 'all' %}
+                {% set callKey = null %}
+            {% endif %}
+
+            {% if callType == 'all' %}
+                {% set label = 'All calls' %}
+            {% else %}
+                {% set label = callType ~ '()' %}
+            {% endif %}
+
+            {% set calls = collector.calls(callKey) %}
+
+            <div class="tab {{ calls|length == 0 ? 'disabled' }}">
+                <h3 class="tab-title">{{ label }} <span class="badge">{{ collector.callsCount(callKey) }}</span></h3>
+
+                <div class="tab-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Time</th>
+                                <th>Call</th>
+                                <th>Params</th>
+                                <th>Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for i, call in calls %}
+                            <tr>
+                                <td class="font-normal text-small text-muted nowrap">{{ i+1 }}</td>
+                                <td class="nowrap">{{ call.duration }} ms</td>
+                                <td class="nowrap">{{ call.type }}()</td>
+                                <td class="nowrap">{{ dump(call.params) }}</td>
+                                <td class="nowrap">{% if call.return is defined %}{{ dump(call.return) }}{% else %}none{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3 id="definitions">Definitions</h3>
+    {% if request.query.has('show_values') %}
+        <p><a href="{{ path('_profiler', { panel: 'dwalczyk_setting', token: token}) }}">Hide current values</a></p>
+    {% else %}
+        <p><a href="{{ path('_profiler', { panel: 'dwalczyk_setting', token: token, show_values: true }) }}">Show current values</a></p>
+    {% endif %}
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            {% if request.query.has('show_values') %}
+                <th>Value</th>
+            {% endif %}
+            <th>Default value</th>
+            <th>Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for defition in collector.data.definitions %}
+        <tr>
+            <td class="nowrap">{{ defition.name }}</td>
+            <td>{{ defition.type }}</td>
+            {% if request.query.has('show_values') %}
+                <td class="nowrap">{{ dump(setting(defition.name)) }}</td>
+            {% endif %}
+            <td class="nowrap">{{ dump(defition.defaultValue) }}</td>
+            <td class="nowrap">{{ dump(defition.options) }}</td>
+        </tbody>
+        {% endfor %}
+    </table>
+
+{% endblock %}

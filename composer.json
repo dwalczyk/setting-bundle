@@ -1,0 +1,61 @@
+{
+  "name": "dwalczyk/setting-bundle",
+  "description": "Symfony bundle that allows you to easily define, read and change settings.",
+  "type": "symfony-bundle",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "homepage": "https://dawidwalczyk.pl",
+  "authors": [
+    {
+      "name": "Dawid Walczyk",
+      "email": "kontakt@dawidwalczyk.pl"
+    }
+  ],
+  "version": "1.0.0",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.2",
+    "doctrine/orm": "^2.11",
+    "symfony/framework-bundle": "^6.0|^7.0",
+    "webmozart/assert": "^1.11",
+    "symfony/serializer": "^6.0|^7.0",
+    "symfony/cache": "^6.0|^7.0",
+    "symfony/stopwatch": "^6.0|^7.0",
+    "twig/twig": "^3.0",
+    "symfony/property-access": "^6.0|^7.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "secure-http": false
+  },
+  "autoload": {
+    "psr-4": {
+      "DWalczyk\\SettingBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DWalczyk\\Tests\\SettingBundle\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.13",
+    "phpstan/phpstan": "^1.10",
+    "spaze/phpstan-disallowed-calls": "^3.1",
+    "phpunit/phpunit": "^10.5"
+  },
+  "scripts": {
+    "phpstan": [
+      "vendor/bin/phpstan analyse -c phpstan.neon --no-progress --memory-limit=-1 --ansi"
+    ],
+    "csfixer": [
+      "vendor/bin/php-cs-fixer fix --config=.cs-fixer.config.php --dry-run --allow-risky=yes --diff --ansi"
+    ],
+    "csfixer-fix": [
+      "vendor/bin/php-cs-fixer fix --config=.cs-fixer.config.php --allow-risky=yes --ansi"
+    ],
+    "tests": [
+      "@php vendor/bin/phpunit -c phpunit.xml --display-deprecations"
+    ]
+  }
+}

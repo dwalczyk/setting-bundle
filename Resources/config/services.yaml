@@ -1,0 +1,75 @@
+services:
+
+  DWalczyk\SettingBundle\SettingRegistry:
+    class: DWalczyk\SettingBundle\SettingRegistry
+    arguments: [
+      !tagged_iterator 'dwalczyk_setting.extension',
+      !tagged_iterator 'dwalczyk_setting.data_transformer'
+    ]
+
+  DWalczyk\SettingBundle\Settings:
+    arguments: [
+        '@DWalczyk\SettingBundle\SettingRegistry',
+        '@dwalczyk_setting.data_storage',
+        '@dwalczyk_setting.cache',
+        '%dwalczyk_setting.cache_lifetime%'
+    ]
+
+  DWalczyk\SettingBundle\Extension\Debug\TraceableSettings:
+    arguments: [
+        '@DWalczyk\SettingBundle\Settings',
+        '@DWalczyk\SettingBundle\Extension\Debug\SettingDataCollector'
+    ]
+
+  DWalczyk\SettingBundle\SettingsInterface: '@DWalczyk\SettingBundle\Settings'
+
+
+  # Debug
+  DWalczyk\SettingBundle\Extension\Debug\SettingDataCollector:
+    arguments: [
+      '@DWalczyk\SettingBundle\SettingRegistry'
+    ]
+    tags:
+      - name: data_collector
+        id: dwalczyk_setting
+        priority: 250
+
+  # Doctrine
+  DWalczyk\SettingBundle\Extension\Doctrine\Repository\SettingRepository:
+    arguments: [
+      '@doctrine.orm.entity_manager'
+    ]
+
+  DWalczyk\SettingBundle\Extension\Doctrine\Repository\SettingRepositoryInterface: '@DWalczyk\SettingBundle\Extension\Doctrine\Repository\SettingRepository'
+
+  DWalczyk\SettingBundle\Extension\Doctrine\DataStorage\DoctrineDataStorage:
+    arguments: [
+      '@DWalczyk\SettingBundle\Extension\Doctrine\Repository\SettingRepositoryInterface',
+      '@doctrine.orm.entity_manager'
+    ]
+
+  DWalczyk\SettingBundle\Extension\Doctrine\DataTransformer\DoctrineDataTransformer:
+    arguments: [
+      '@doctrine.orm.entity_manager',
+      '@serializer'
+    ]
+    tags:
+      - { name: 'dwalczyk_setting.data_transformer', priority: -10 }
+
+
+  # Serializer
+  DWalczyk\SettingBundle\Extension\Serializer\DataTransformer\SerializerDataTransformer:
+    arguments: [
+      '@serializer'
+    ]
+    tags:
+      - { name: 'dwalczyk_setting.data_transformer', priority: -100 }
+
+
+  # Twig
+  DWalczyk\SettingBundle\Extension\Twig\TwigExtension:
+    tags:
+      - { name: twig.extension }
+    arguments: [
+      '@DWalczyk\SettingBundle\SettingsInterface'
+    ]
