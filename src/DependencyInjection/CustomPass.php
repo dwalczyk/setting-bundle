@@ -8,6 +8,7 @@ use DWalczyk\SettingBundle\Extension\Debug\TraceableSettings;
 use DWalczyk\SettingBundle\Settings;
 use DWalczyk\SettingBundle\SettingsInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -22,18 +23,18 @@ final class CustomPass implements CompilerPassInterface
         $cacheParam = $container->getParameter('dwalczyk_setting.cache');
         $dataStorageParam = $container->getParameter('dwalczyk_setting.data_storage');
 
-        if (!\is_string($cacheParam)) {
-            throw new \Exception(\sprintf('Invalid container parameter "%s" - only string accepted.', 'dwalczyk_setting.cache'));
+        if (!empty($cacheParam)) {
+            if (!\is_string($cacheParam)) {
+                throw new \Exception(\sprintf('Invalid container parameter "%s" - only string accepted.', \print_r($cacheParam, true)));
+            }
+
+            $container->setAlias('dwalczyk_setting.cache', new Alias($cacheParam));
+        } else {
+            $container->setDefinition('dwalczyk_setting.cache', new Definition(NullAdapter::class));
         }
 
         if (!\is_string($dataStorageParam)) {
-            throw new \Exception(\sprintf('Invalid container parameter "%s" - only string accepted.', 'dwalczyk_setting.data_storage'));
-        }
-
-        if ($container->hasParameter('dwalczyk_setting.cache')) {
-            $container->setDefinition('dwalczyk_setting.cache', $container->getDefinition($cacheParam));
-        } else {
-            $container->setDefinition('dwalczyk_setting.cache', new Definition(NullAdapter::class));
+            throw new \Exception(\sprintf('Invalid container parameter "%s" - only string accepted.', \print_r($dataStorageParam, true)));
         }
         $container->setDefinition('dwalczyk_setting.data_storage', $container->getDefinition($dataStorageParam));
 

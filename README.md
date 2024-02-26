@@ -16,6 +16,7 @@ Integrated with:
 - [Data storages](#data-storages)
 - [Data transformers](#data-transformers)
   - [Doctrine data transformer](#doctrinedatatransformer)
+- [Cache](#cache)
 - [More effective user (setting owner) passing](#more-effective-user-setting-owner-passing)
 - [Twig](#twig)
 - [Symfony profiler](#symfony-profiler)
@@ -191,6 +192,36 @@ Supported types:
 
 &nbsp;
 
+### Cache
+To use cache, you must configure cache in your symfony configuration and then `cache` option in the bundle configuration.
+```yaml
+framework:
+    cache:
+        app: cache.adapter.filesystem
+```
+```yaml
+dwalczyk_setting:
+  cache: cache.app
+```
+
+#### or with custom pool:
+```yaml
+framework:
+    cache:
+        pools:
+            setting_pool:
+                adapter: cache.adapter.filesystem
+```
+
+```yaml
+dwalczyk_setting:
+  cache: setting_pool
+```
+
+*if you don't want to use cache, leave the `cache` option empty or do not define it.*
+
+&nbsp;
+
 ### More effective user (setting owner) passing
 Implement `SettingOwnerInterface` in your security user class.
 ```php
@@ -217,6 +248,8 @@ public function test(SettingsInterface $settings): Response
 }
 ```
 &nbsp;
+
+h3
 
 ### Twig
 Functions:

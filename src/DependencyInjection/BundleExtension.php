@@ -29,9 +29,7 @@ final class BundleExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('dwalczyk_setting.data_storage', $config['data_storage']);
-        if (isset($config['cache'])) {
-            $container->setParameter('dwalczyk_setting.cache', $config['cache']);
-        }
+        $container->setParameter('dwalczyk_setting.cache', $config['cache'] ?? null);
         $container->setParameter('dwalczyk_setting.cache_lifetime', $config['cache_lifetime']);
 
         $def = new Definition(FromConfigurationSettingExtension::class, [$config['definitions']]);
