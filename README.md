@@ -249,8 +249,6 @@ public function test(SettingsInterface $settings): Response
 ```
 &nbsp;
 
-h3
-
 ### Twig
 Functions:
 ```text

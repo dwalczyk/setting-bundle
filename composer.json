@@ -24,10 +24,6 @@
     "twig/twig": "^3.0",
     "symfony/property-access": "^6.0|^7.0"
   },
-  "config": {
-    "optimize-autoloader": true,
-    "secure-http": false
-  },
   "autoload": {
     "psr-4": {
       "DWalczyk\\SettingBundle\\": "src/"
