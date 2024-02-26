@@ -118,7 +118,7 @@ public function test(SettingsInterface $settings): Response
 Data storages are classes responsible for writing and reading previously saved settings.
 
 Available built-in data storages:
-- ```DWalczyk\SettingBundle\Extension\Doctrine\DataStorage``` - Doctrine ORM storage
+- ```DWalczyk\SettingBundle\Extension\Doctrine\DataStorage\DoctrineDataStorage``` - Doctrine ORM storage
 
 You can create your custom data storage, just create symfony service that implements
 `DWalczyk\SettingBundle\DataStorageInterface` and insert its name to configuration.
