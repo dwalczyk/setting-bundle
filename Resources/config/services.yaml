@@ -54,7 +54,7 @@ services:
       '@serializer'
     ]
     tags:
-      - { name: 'dwalczyk_setting.data_transformer', priority: -10 }
+      - { name: 'dwalczyk_setting.data_transformer', priority: 10 }
 
 
   # Serializer
